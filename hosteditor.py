@@ -1,31 +1,60 @@
 import platform
 from shutil import copy
-#from tkinter import Tk
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 
-#print(platform.system())
+osdict = {
+"Linux" : "/etc/hosts",
+"Darwin" : "/etc/hosts",
+"Windows" : "C:\Windows\System32\drivers\etc\hosts"
+}
+filename = ""
 
-root = Tk()
-root.withdraw()
-filename = askopenfilename()
-root.destroy()
+def fileBrowser():
+    global filename
+    root = Tk()
+    root.withdraw()
+    filename = askopenfilename()
+    root.destroy()
 #print(filename)
 
-copy(filename,'./temphost')
+def choosePathEntryMethod():
+    def buttonPress(option):
+        global entrychoice
+        if(option == 0):
+            entrychoice = "default"
+            root.destroy()
+        if(option == 1):
+            entrychoice = "browse"
+            root.destroy()
 
-#f = open(filename, 'r')
-#message = f.read()
-#print(message)
-#f.close()
+    root = Tk()
+
+    l = Label(root, text="Use default path or custom location")
+    l.pack()
+
+    b1 = Button(root, text="Default", command=lambda: buttonPress(0))
+    b1.pack(side=LEFT)
+
+    b2 = Button(root, text="Browser", command=lambda: buttonPress(1))
+    b2.pack(side=RIGHT)
+
+    root.mainloop()
+
+choosePathEntryMethod()
+
+if(entrychoice == "default"):
+    operatingsystem = platform.system()
+    filename = osdict[operatingsystem]
+if(entrychoice == "browse"):
+    fileBrowser()
+
+copy(filename,'./temphost')
 
 ip = ""
 hostname = ""
 
 f = open('./temphost', 'a')
-#message = f.read()
-#print(message)
-
 
 widgettext = ""
 
@@ -55,10 +84,35 @@ def drawInputWindow(inputField):
 #root.destroy()
     root.mainloop()
 
-drawInputWindow("IP")
-ip = widgettext
-drawInputWindow("Hostname")
-hostname = widgettext
+def askForUserInput():
+    global ip
+    global hostname
+    drawInputWindow("IP")
+    ip = widgettext
+    drawInputWindow("Hostname")
+    hostname = widgettext
+    userEntryConfirmation()
+
+
+def userEntryConfirmation():
+    global ip
+    global hostname
+
+    def confirmButton():
+        root2.destroy()
+    def cancelButton():
+        root2.destroy()
+        askForUserInput()
+    root2 = Tk()
+    l1 = Label(root2, text="Confirm entry")
+    l1.pack()
+    confirmmessage = "IP: " + ip + " Hostname: " + hostname
+    Label(root2, text=confirmmessage).pack()
+    Button(root2, text="Ok", command=confirmButton).pack(side=LEFT)
+    Button(root2, text="Cancel", command=cancelButton).pack(side=RIGHT)
+    root2.mainloop()
+
+askForUserInput()
 
 f.write('\n' + ip + '\t' + hostname)
 
