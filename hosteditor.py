@@ -59,6 +59,8 @@ f = open('./temphost', 'a')
 widgettext = ""
 
 def drawInputWindow(inputField):
+    global ip
+    global hostname
 
     def printtext():
         global e
@@ -77,6 +79,10 @@ def drawInputWindow(inputField):
     global e
     e = Entry(root)
     e.pack()
+    if(inputField=="IP"):
+        e.insert(0,ip)
+    if(inputField=="Hostname"):
+        e.insert(0,hostname)
     e.focus_set()
 
     b = Button(root,text='Submit',command=printtext)
