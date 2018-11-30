@@ -2,6 +2,7 @@ import platform
 from shutil import copy
 from tkinter import *
 from tkinter.filedialog import askopenfilename
+from os import remove
 
 osdict = {
 "Linux" : "/etc/hosts",
@@ -121,5 +122,7 @@ def userEntryConfirmation():
 askForUserInput()
 
 f.write('\n' + ip + '\t' + hostname)
-
 f.close()
+
+copy('./temphost',filename)
+remove('./temphost')
