@@ -30,6 +30,7 @@ def choosePathEntryMethod():
             root.destroy()
 
     root = Tk()
+    root.title("Host editor")
 
     l = Label(root, text="Use default path or custom location")
     l.pack()
@@ -72,7 +73,7 @@ def drawInputWindow(inputField):
 
     root = Tk()
 
-    root.title('Name')
+    root.title("Host editor")
 
     t = Label(root, text=inputField)
     t.pack()
@@ -111,6 +112,7 @@ def userEntryConfirmation():
         root2.destroy()
         askForUserInput()
     root2 = Tk()
+    root2.title('Host editor')
     l1 = Label(root2, text="Confirm entry")
     l1.pack()
     confirmmessage = "IP: " + ip + " Hostname: " + hostname
@@ -124,5 +126,15 @@ askForUserInput()
 f.write('\n' + ip + '\t' + hostname)
 f.close()
 
-copy('./temphost',filename)
-remove('./temphost')
+try:
+    copy('./temphost',filename)
+    remove('./temphost')
+except Exception:
+    root = Tk()
+    def confirmButton():
+        root.destroy()
+    root.title("Host editor")
+    Label(root, text="No admin privileges").pack()
+    Button(root, text="Ok", command=confirmButton).pack()
+    root.mainloop()
+    remove('./temphost')
